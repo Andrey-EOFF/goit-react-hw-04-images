@@ -1,46 +1,39 @@
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { ModalOverlay, ModalShow } from './Modal.styled';
 import PropTypes from 'prop-types';
 
-class Modal extends Component {
-  state = {
-    show: false,
-  };
+const Modal = ({ show, image, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+    window.addEventListener('keydown', handleKeyDown);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
-  handleKeyDown = event => {
-    if (event.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
-
-  handleBackdropClick = event => {
+  const handleBackdropClick = event => {
     if (event.currentTarget === event.target) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    const { show } = this.props;
-    return (
-      <ModalOverlay
-        className={show ? 'overlay show' : 'overlay'}
-        onClick={this.handleBackdropClick}
-      >
-        <ModalShow className="modal">
-          <img src={this.props.image} alt="" />
-        </ModalShow>
-      </ModalOverlay>
-    );
-  }
-}
+  return (
+    <ModalOverlay
+      className={show ? 'overlay show' : 'overlay'}
+      onClick={handleBackdropClick}
+    >
+      <ModalShow className="modal">
+        <img src={image} alt="" />
+      </ModalShow>
+    </ModalOverlay>
+  );
+};
 
 Modal.propTypes = {
   show: PropTypes.bool.isRequired,
