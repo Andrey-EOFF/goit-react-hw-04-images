@@ -15,6 +15,7 @@ const Status = {
 
 const ImageGallery = ({ searchImg }) => {
   const [images, setImages] = useState([]);
+
   const [error, setError] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
   const [page, setPage] = useState(1);
